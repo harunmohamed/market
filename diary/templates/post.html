@@ -13,22 +13,16 @@
     <div class="col-lg-6 offset-lg-3 mb-4">
     <div class="post">
       <header class="pb-0" style="padding:0;">
-          <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="profile pic" class="profile-thumbnail">
+          <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="dp" class="profile-thumbnail">
           <div class="profile-name">
               <h3 data-toggle="popover"><a href="#" style="color:#fff;">  {{post.author.username}}
                {% if post.author.username in ["harun" , "bambi"] %}<img src="https://image.flaticon.com/icons/svg/1271/1271380.svg" style="width:17px;height:17px;margin-left: -5px;">{% endif %}
              </a> {% if post.author != current_user and not current_user.is_following(post.author) %}<a class="pt-2 pl-2" href="{{ url_for('follow', username=post.author.username) }}" style="font-size:12px;text-decoration:none;">· Follow</a>{% endif %}</h3>
              <small>@{{post.author.email.split("@")[0] | lower}}</small>
           </div>
-          <div class="follow-btn">
-              <div class="dropdown dropleft">
-            <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;">
-              <i class="fas fa-ellipsis-v" style="font-size: 28px;"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
+          <div class="follow-btn"> 
               <a class="btn btn-warning btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}">✏edit</a>
-              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">🗑️delete</button>
-            </div>
+              <button type="button" class="badge badge-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">🗑️delete</button>
           </div>
         </header>
 
@@ -43,10 +37,10 @@
           </p>
 
           {% set words = post.content.split() %}
-          <a class="btn btn-sm btn-outline-dark p-2 ml-1" style="border-radius:10px;border:1px solid #FE3C72;">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</a> 
+          <a class="btn btn-sm btn-outline-dark p-1 ml-1 mt-2">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</a> 
           <!--('%a, %b %d, %Y at %H:%M:%S')-->
           {% if words | count > 60 %}
-          <a class="btn btn-sm btn-outline-dark p-2 ml-1" style="border-radius:10px;border:1px solid #FE3C72;">{{words | count}} words</a>
+          <a class="btn btn-sm btn-outline-dark p-1 ml-1 mt-2">{{words | count}} words</a>
           {% endif %}
                             
 

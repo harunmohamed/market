@@ -9,12 +9,6 @@ from diary.models import User
 class RegistrationForm(FlaskForm):
 	username = StringField('Username', validators = [DataRequired(), Length(min=2, max=20), Regexp(r'^[\w.-_.]+$', message='No Spaces. Use "-" or "_" or "." instead')]) 
 	email = StringField('Email', validators = [DataRequired(), Email()])
-	department = StringField('Department', validators=[DataRequired()])
-	student_number = StringField('Student Number', validators=[DataRequired()])
-	country = StringField('Country', validators=[DataRequired()])
-	age = DateField('birthday', format='%Y-%m-%d', validators=[DataRequired()])
-	gender = RadioField('Gender', choices=[('male','male'),('female','female')])
-	hobby = StringField('Hobby', validators=[DataRequired()])
 	password = PasswordField('Password', validators = [DataRequired()])
 	confirm_password = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
 	submit = SubmitField('Sign Up')

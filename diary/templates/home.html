@@ -13,7 +13,7 @@
                   <div class="card-header dark-theme">
                     <div class="media align-items-center">
                       <div class="avatar avatar-m">
-                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="logo" class="profile-thumbnail" style="width:35px;height:35px;border-radius:50%;padding-right:3px;">
+                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="dp" class="profile-thumbnail" style="width:35px;height:35px;border-radius:50%;padding-right:3px;">
                       </div>
                       <div class="media-body ml-2 dark">
                         <h5 class="mb-0 fs-0">{{greeting}} {{current_user.username.title()}}</h5>
@@ -81,22 +81,14 @@
             </a>
          </code> <br> 
 
-        <div class="mt-2">
+        <div>
           <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" style="width:25px;height:25px;border-radius:50%">
-          <span style="text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:1.5px;" class="text-muted">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</span> <br>
+          <span style="text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:1.5px;" class="text-muted">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</span>
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-sm" type="submit" value="🗑️" style="position:absolute;right:0;bottom:6px;">
+          </form>
         </div>
 
-           <div style="max-height:250px;overflow:auto" class="mb-2">
-            {% for comment in post.comments if current_user.is_authenticated %}
-            <a href="#">
-              <img src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}" style="width:20px;height:20px;border-radius:50%;"></a>
-                <span>
-                  <code style="color:#1e90ff;">{{comment.author.username}}:</code> 
-                  <code style="color:#fff;">{{comment.body}}</code> <br>
-                  <small class="text-muted ml-4">{{ moment(comment.date_posted).fromNow() }}</small>
-                </span> <br>
-            {% endfor %}
-        </div>
 
         </div>
       </div><!--card-->
