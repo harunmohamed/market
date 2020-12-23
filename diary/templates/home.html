@@ -81,6 +81,8 @@
             </a>
          </code> <br> 
 
+         {% if post.comments.count() > 0 %}<code>{{post.comments.count()}} comments</code><br>{% endif %}
+
         <div>
           <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" style="width:25px;height:25px;border-radius:50%">
           <span style="text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:1.5px;" class="text-muted">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</span>
