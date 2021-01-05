@@ -2,14 +2,14 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/harunmohamed/dating">
-    <img src="https://www.flaticon.com/svg/static/icons/svg/2950/2950232.svg" alt="Logo" width="80" height="80">
+  <a href="https://github.com/harunmohamed/market">
+    <img src="https://marrket.herokuapp.com/static/resources/logo.svg" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Bambi Diary</h3>
+  <h3 align="center">Bambi Market</h3>
 
   <p align="center">
-    Your daily personal Journal!
+    Interactive eCommerce Platform for Northern Cyprus
     <br />
     <a href="https://bambi.app">View App</a>
     ·
