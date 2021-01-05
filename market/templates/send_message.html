@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3 d-none d-lg-block position-fixed">
+     
+       <h1>
+
+        Recent Chats
+         {% set new_messages = current_user.new_messages() %}<span id="message_count" class="badge badge-warning"style="visibility: {% if new_messages %}visible{% else %}hidden {% endif %};">{{ new_messages }}</span></a>
+
+      </h1>
+
+      <div style="overflow:auto;height:500px;padding-right:5px;">
+      {% for person in recent_chats %}
+      <a href="{{ url_for('message',recipient=person.username) }}" style="text-decoration:none;">
+      <header class="mb-2">
+        <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail">
+        <div class="profile-name">
+          <h3>{{person.name}}</h3>
+          <!--{% for message in received_all if person == message.author %}
+          <small title="">{{ message.body | truncate(45) }}</small>
+          {% endfor %}-->
+          <small class="text-muted">@{{ current_user.username }}</small>
+        </div>
+      </header>
+      </a>
+      {% endfor %}
+    </div>
+
+</div>
+
+
+
+    <div class="col-lg-7 offset-lg-3"> 
+      
+      <h3 style="text-align:center;margin-left:-50px;">
+        <img src="{{ url_for('static', filename='profile_pics/' + user.dp) }}" alt="default profile" style="width:40px;height:40px;border-radius:50%;border:2px solid #ccc">
+        <a href="{{url_for('user_posts', username=recipient)}}" style="color:#000;">{{user.username.title()}}
+             {% if recipient in ["harun" , "bambi"] %}
+             <img src="https://image.flaticon.com/icons/svg/1271/1271380.svg" style="width:17px;height:17px;margin-left: -5px;">
+             {% endif %}
+           </a></h3>
+
+           <div style="overflow-y:auto;height:460px;padding:5px;">
+
+
+      {% for message in messages %}
+          <p class="mb-2" 
+          style="
+          {% if message.author == current_user%}
+            text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff;
+          {%else%}
+            text-align:left;padding:5px;border-radius:10px;display:inline-block;max-width:75%;border:2px solid #ccc;
+          {% endif %}">
+
+          {% if message.author != current_user %}
+          <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" title="{{message.author.username.lower()}}" style="width:30px;height:30px;border-radius:50%">
+          {% endif %} 
+
+          {{message.body | urlize(40, target='_blank')}} 
+          <!--{{message.body | safe | urlize(40, target='_blank')}}-->
+          <br>
+          <small style="display:inline-block;float:right;">{{message.timestamp.strftime('%a %H:%M')}}</small>
+        </p>
+        <br>
+
+        {% else %}
+            <!-- if chat has no messages -->
+            <p class="mb-2" style="text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#212121;">
+
+            <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="profile pic"style="width:35px;height:35px;border-radius:50%">
+
+            Hey {{current_user.username.title()}}, say something nice to {{user.username}}. How is that for a start? 😉🍻
+
+            </p>
+
+
+        {% endfor %}
+
+        <div id="chat_bottom"></div>
+
+        </div>
+
+      <div class="post" style="background:none;width:95%;">
+          <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="input-group mt-2 mr-2" style="overflow:hidden">
+              {% if form.message.errors %}
+                {{ form.message(class="form-control border-0 rounded-0 resize-none", placeholder="type message...") }}
+                <div class="invalid-feedback">
+                  {% for error in form.message.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+                  {% else %}
+                    {{ form.message(class="form-control border-0 rounded-0 resize-none", placeholder="type message...") }}
+                  {% endif %}
+                  <div class="input-group-append">
+                    {{ form.submit(class="btn btn-outline-dark btn-sm p-3") }}
+                  </div>
+              </div>
+          </form>
+  </div>
+
+</div>
+
+
+
+    <!--<div class="col-lg-3 d-none d-lg-block position-fixed offset-sm-9">
+       notifications and relevant ads 
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category , message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{message}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+</div>-->
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+  <script>
+     $('.love').click(function(){
+      $(this).toggleClass('liked');
+    });
+  </script>
+
+  <!--<script>
+    // reload page every 5 seconds
+    setTimeout(function(){
+      window.location.reload(1);
+    }, 30000);
+  </script>-->
+
+  <script>
+    // go to bottom of chat on load.
+    window.onload = function(){
+      document.getElementById('chat_bottom').scrollIntoView();
+  };
+  </script>
+
+  <script>
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover({
+    trigger: 'hover'
+  }); 
+});
+</script>
+
+<!--<script id="dsq-count-scr" src="//baambi.disqus.com/count.js" async></script>-->
+
+{% endblock content %}

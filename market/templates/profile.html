@@ -1,0 +1,470 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<style>
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+.container {
+    max-width: 93.5rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+.card-body span{
+  color: #1e90ff;
+}
+ul span{
+  color: #000;
+}
+section .btn {
+    color: inherit;
+    padding: 5px;
+    cursor: pointer;
+    border:none;
+    outline:none;
+    font-size: 15px;
+}
+/* Profile Section */
+.profile::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.profile-image {
+    float: left;
+    width: calc(33.333% - 1rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 3rem;
+}
+.profile-image img {
+    border-radius: 50%;
+    margin-top:-10px;
+}
+.profile-user-settings,
+.profile-stats,
+.profile-bio {
+    float: left;
+    width: calc(66.666% - 2rem);
+}
+.profile-user-settings {
+    margin-top: 1.1rem;
+}
+.profile-user-name {
+    display: inline-block;
+    font-size: 3.2rem;
+    font-weight: 300;
+}
+.profile-edit-btn {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    border: 0.1rem solid #dbdbdb;
+    border-radius: 0.3rem;
+    padding: 0 1.4rem;
+    margin-left: 1rem;
+    margin-top:-15px;
+}
+.profile-stats {
+    margin-top: 2.3rem;
+}
+.profile-stats li {
+    display: inline-block;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-right: 4rem;
+    cursor: pointer;
+}
+.profile-stats li:last-of-type {
+    margin-right: 0;
+}
+.profile-bio {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2.3rem;
+}
+.profile-real-name,
+.profile-stat-count,
+.profile-edit-btn {
+    font-weight: 600;
+}
+/* Media Query */
+@media screen and (max-width: 40rem) {
+    .profile {
+        display: flex;
+        flex-wrap: wrap;
+        /*padding: 4rem 0;*/
+        padding-top:5px;
+    }
+    .profile::after {
+        display: none;
+    }
+    .profile-image,
+    .profile-user-settings,
+    .profile-bio,
+    .profile-stats {
+        float: none;
+        width: auto;
+    }
+    .profile-image img {
+        width: 7.7rem;
+        margin-top: 2px;
+    }
+    .profile-user-settings {
+        flex-basis: calc(100% - 10.7rem);
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+    .profile-user-name {
+        font-size: 2.2rem;
+    }
+    .profile-edit-btn {
+        order: 1;
+        padding: 0;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    .profile-edit-btn {
+        margin-left: 0;
+    }
+    .profile-bio {
+        font-size: 1.4rem;
+        margin-top: 1.5rem;
+    }
+    .profile-edit-btn,
+    .profile-bio,
+    .profile-stats {
+        flex-basis: 100%;
+    }
+    .profile-stats {
+        order: 1;
+        margin-top: 1.5rem;
+    }
+    .profile-stats ul {
+        display: flex;
+        text-align: center;
+        padding: 1rem 0;
+        border-top: 0.1rem solid #212121;
+        border-bottom: 0.1rem solid #212121;
+    }
+    .profile-stats li {
+        font-size: 1.4rem;
+        flex: 1;
+        margin: 0;
+    }
+    .profile-stat-count {
+        display: block;
+    }
+}
+@supports (display: grid) {
+    .profile {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: repeat(3, auto);
+        grid-column-gap: 3rem;
+        align-items: center;
+    }
+    .profile-image {
+        grid-row: 1 / -1;
+    }
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+        grid-gap: 2rem;
+    }
+    .profile-image,
+    .profile-user-settings,
+    .profile-stats,
+    .profile-bio,
+    .gallery-item,
+    .gallery {
+        width: auto;
+        margin: 0;
+    }
+    @media (max-width: 40rem) {
+        .profile {
+            grid-template-columns: auto 1fr;
+            grid-row-gap: 1.5rem;
+        }
+        .profile-image {
+            grid-row: 1 / 2;
+        }
+        .profile-user-settings {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 1rem;
+        }
+        .profile-edit-btn,
+        .profile-stats,
+        .profile-bio {
+            grid-column: 1 / -1;
+        }
+        .profile-user-settings,
+        .profile-edit-btn,
+        .profile-settings-btn,
+        .profile-bio,
+        .profile-stats {
+            margin: 0;
+        }
+    }
+}
+.container-fluid .dropdown a{
+  border-top: 1px solid #121212;
+  color:#fff;
+}
+.container-fluid .dropdown a:hover{
+  color:#000;
+}
+</style>
+
+
+<div class="container-fluid">
+  <section style="padding-top: 5px;">
+
+    <div class="profile">
+
+      <div class="profile-image">
+
+        <img src="{{ url_for('static', filename='profile_pics/' + user.dp) }}" alt="" class="profile-thumbnail" style="width:150px;height:150px;border:2px solid #ccc">
+
+      </div>
+
+      <div class="profile-user-settings" style="display:flex;">
+
+        <h2 class="profile-user-name">{{user.username.title()}}
+          {% if user.username in ["harun" , "bambi"] %}
+          <img src="{{ url_for('static', filename='resources/' + 'verified.png') }}" style="width:20px;height:20px;margin-left: -5px;" title="Verified"> 
+          {% endif %}
+        </h2>
+
+        {% if current_user.is_authenticated %}
+        <div class="dropdown d-none d-lg-block" style="margin:auto 10px;">
+              <button class="btn  btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left:2px;">
+              </button>
+              <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton" style="cursor:pointer;padding:0;background:#f8f9fc;color:#000;margin-left:-80px;">
+                {% if current_user == user%}
+                {% set new_messages = current_user.new_messages() %}
+                <a class="dropdown-item" href="{{ url_for('messages') }}" style="border-top:none;">🔐 Messages <span id="message_count" class="badge badge-warning" style="display:{% if new_messages %}inline{% else %}none{% endif %};">{{ new_messages }}</span></a>
+                <a class="dropdown-item" href="{{url_for('account')}}">⚜ Edit Profile</a>
+                {% else %}
+                  {% if not current_user.is_following(user) %}
+                    <a class="dropdown-item" href="{{ url_for('follow', username=user.username) }}" style="border-top:none;">🔅 Follow</a>
+                  {% else %}
+                    <a class="dropdown-item" href="{{ url_for('message',recipient=user.username) }}" style="border-top:none;">🔏 Message</a>
+                    <a class="dropdown-item" href="{{ url_for('unfollow', username=user.username) }}">👽 Unfollow</a>
+                  {% endif %}
+                {% endif %}
+              </div>
+          </div>
+          {% endif %}
+
+
+      </div>
+
+      <div class="profile-stats">
+
+
+        <ul>
+          <li style="font-size:22px;" {% if user == current_user %} data-toggle="modal" data-target="#mutual" {% endif %}><span class="profile-stat-count">{{posts.total}}</span> <small>posts</small></li>
+          <li style="font-size: 22px;" {% if user == current_user %} data-toggle="modal" data-target="#followers" {% endif %}><span class="profile-stat-count">{{ user.followers.count() }}</span> <small>followers</small></li>
+          <li style="font-size: 22px;" {% if user == current_user %} data-toggle="modal" data-target="#following" {% endif %}><span class="profile-stat-count">{{ user.followed.count() }}</span> <small>following</small></li>
+        </ul>
+
+      </div>
+
+      <div class="profile-bio">
+
+        <p class="mb-2" style="font-size:18px;">
+            <!--<code>{% if user.email %} {{user.email.split("@")[0] | lower}} {% endif %} - </code>-->
+            <code>{{user.name.lower()}} - </code>
+            {% if user.bio %}
+            <code style="color:#000;">{{user.bio}}</code> <!-- removed | safe -->
+            {% else %}
+            <code style="color:#000;">hey there, lets be friends 🤗</code>
+            {%endif%}
+        </p>
+
+        {% if current_user.is_authenticated %}
+        <div class="d-block d-lg-none">
+          <code style="color:#000;font-size:18px;">
+          <!-- if current_user is not following user -->
+          {% if user != current_user and not current_user.is_following(user) %}
+            <a class="badge badge-info p-2" href="{{ url_for('follow', username=user.username) }}" style="color:#000;">🔅 Follow</a>
+          {% endif %}
+          <!-- if current_user is user -->
+          {% if user == current_user %}
+            <a class="badge badge-info p-2" href="{{ url_for('messages') }}" style="color:#000;">📬 Inbox <span id="message_count" class="badge badge-warning" style="display:{% if new_messages %}inline{% else %}none{% endif %};">{{ new_messages }}</span></a>
+            <a class="badge badge-info p-2" href="{{url_for('account')}}" style="color:#000;">⚜ Edit Profile</a>
+          {% endif %}
+          <!-- if current_user is following user -->
+          {% if current_user != user and current_user.is_following(user) %}
+            <a class="badge badge-info p-2" href="{{ url_for('message',recipient=user.username) }}" style="color:#000;">📧 Message</a>
+            <a class="badge badge-danger p-2" href="{{ url_for('unfollow', username=user.username) }}" style="color:#000;">👽 Unfollow</a>
+          {% endif %}
+          </code>
+        </div>
+        {% endif %}
+
+
+
+      </div>
+
+      
+
+    </div>
+    <!-- End of profile section -->
+
+</section>
+
+  <div class="row">
+
+    <div class="col-lg-1"></div>
+
+
+
+    <div class="col-lg-10">
+     <div class="card-columns">
+   {% for post in posts %}
+      <div class="card" style="border-radius:10px;">
+        <a href="{{ url_for('post', post_id=post.id) }}">
+        <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}">
+        </a>
+        {% if post.author != current_user %}
+          <i class="fas fa-heart love" style="font-size:26px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+        {% else %}
+                <div class="dropleft" style="position:absolute;top:8px;right:8px;">
+                <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;border:none;">
+                  <i class="fas fa-ellipsis-v" style="font-size: 28px;text-shadow: 0 0 3px #212121;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
+                  <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float:right;">🗑️delete</button>
+                </div>
+                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel" style="color:#000;">Delete post?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                          <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        {% endif %}
+
+
+
+
+        <div class="card-block p-2" style="background:#f8f9fc;box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15);border-radius:10px;">
+          <span style="text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:1.5px;">{{post.title}} • {{post.date_posted.strftime('%a, %d %b')}}</span> <br>
+
+          <span class="card-title" style="font-size:30px;color:#1e90ff;">{{post.price}}</span> <br>
+          <code style="color:#000;">{{post.content}}</code> <br>
+
+          <small>📌 {{post.author.location}}</small>
+          <small class="pl-3">📞 {{post.author.contact}}</small>
+          {% if post.author != current_user %}
+            <a href="{{ url_for('message',recipient=post.author.username) }}"><small class="pl-3">💬 DM</small></a>
+          {% endif %}
+
+          <div style="display:flex;" class="mt-3">
+            <a href="{{url_for('user_posts', username=post.author.username)}}" style="color:#fff;">
+            <img src="{{ url_for('static', filename='profile_pics/' + post.author.dp) }}" style="height:45px;width:45px;border-radius:50%;"></a>
+            <p class="ml-2" style="font-size:14px;font-weight:600;">{{post.author.name}} <br>
+            <small>@{{post.author.username}}</small>
+            </p>
+          </div><!--seller div-->
+
+        </div>
+      </div><!--card-->
+   {% endfor %}
+  </div><!--card-columns-->
+  <div style="margin-bottom: 60px;"></div>
+</div>
+
+
+    <div class="col-lg-1 d-none d-lg-block"></div>
+
+
+
+  <!-- Followers Modal -->
+<div class="modal fade" id="followers" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content" style="color:#000;height:310px;overflow:auto;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ user.followers.count() }} Followers</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for user in user.followers %}
+          <header style="background:none;color:#000;">
+          <img src="{{ url_for('static', filename='profile_pics/' + user.dp) }}" alt="default profile" class="profile-thumbnail" style="width:30px;height:30px;">
+          <div class="profile-name">
+            <a href="{{ url_for('user_posts', username=user.username) }}" style="text-decoration:none;color:#000;">{{user.username}}</a>
+          </div>
+          <div class="follow-btn">
+              {% if current_user.is_authenticated and user != current_user and not current_user.is_following(user) %}<a href="{{ url_for('follow', username=user.username) }}" style="font-size:12px;text-decoration:none;">Follow</a>{% endif %}
+            </div>
+      </header>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Following Modal -->
+<div class="modal fade" id="following" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content" style="color:#000;height:310px;overflow:auto;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ user.followed.count() }} Following</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for user in user.followed %}
+           <header style="background:none;color:#000;">
+          <img src="{{ url_for('static', filename='profile_pics/' + user.dp) }}" alt="default profile" class="profile-thumbnail" style="width:30px;height:30px;">
+          <div class="profile-name">
+            <a href="{{ url_for('user_posts', username=user.username) }}" style="text-decoration:none;color:#000;">{{user.username}}</a>
+          </div>
+          <div class="follow-btn">
+              {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}<a style="font-size:12px;text-decoration:none;color:#1e90ff;">follows you</a>{% endif %}
+            </div>
+      </header>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  {{ pagedown.include_pagedown() }}
+
+
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+
+
+{% endblock content %}

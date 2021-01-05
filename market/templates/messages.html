@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3 d-none d-lg-block position-fixed">
+      <a href="{{ url_for('user_posts',username=current_user.username) }}" style="text-decoration:none;">
+      <header class="mb-2">
+        <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="default profile" class="profile-thumbnail">
+        <div class="profile-name">
+          <span class="mt-2 pt-1" style="font-size:20px;">{{greeting}} {{current_user.username.title()}}</span>
+        </div>
+      </header>
+    </a>
+      <!-- notifications and relevant ads -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category , message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{message}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <div style="padding:7px;cursor:pointer;border-radius:5px;overflow:auto;max-height:318px;">
+        <h5 style="padding-left: 3px;">Recent Chats</h5>
+        {% for person in recent_chats %}
+        <a href="{{url_for('message', recipient=person.username)}}" style="text-decoration:none;">
+        <header>
+        <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail">
+        <div class="profile-name">
+          <h3>{{person.username}}</h3>
+            <span class="d-none">
+            {% set top_message = [] %}
+            {% for message in messages_received if message.author == person %}
+              {{ top_message.append(message.body) }}
+            {% endfor %}
+            </span>
+            <small title="{{top_message[0]}}">{{ top_message[0] | truncate(40) }}</small>
+            <!--<small class="text-muted" style="font-size:70%;">active {{ moment(person.last_seen).fromNow() }}</small>-->
+        </div>
+      </header>
+      </a>
+      {% endfor %}
+      </div>
+       <header class="mt-2" style="padding:8px 8px 8px 32px;font-size:20px;display:block;border-radius:5px;">
+        <a href="{{ url_for('logout') }}" style="text-decoration:none;color:#818181;"> 🛫 Logout</a>
+        </header>
+</div>
+
+
+
+    <div class="col-lg-6 offset-lg-3">
+     
+      {% if current_user.is_authenticated %}
+          <h2 class="d-block d-lg-none mt-1">My Messages</h2>
+          <section class="cardi scroll mb-2">
+            {% for user in users if user != current_user and user.is_following(current_user) and current_user.is_following(user) %}
+            <div class="others">
+            <div class="card--content"><a href="{{ url_for('message',recipient=user.username) }}"><img src="{{ url_for('static', filename='profile_pics/' + user.dp) }}" loading="lazy" alt=""></a>
+            </div>
+            <small style="font-size:15px;color:#f8f8f2;padding-left:15px">
+            <code style="color:#fff;">{{user.username.lower()}}</code>
+            {% if user.username in ["harun" , "bambi"] %}<img src="{{ url_for('static', filename='resources/' + 'verified.png') }}" style="width:15px;height:15px;">{% endif %}
+          </small>
+            </div>
+            {% endfor %}
+            <div class="card--content"></div>
+            <div class="card--content"></div>
+            <div class="card--content"></div>
+          </section>
+          {% endif %}
+
+
+
+
+
+   {% for message in messages_received %}
+    <div class="post mb-2 d-none d-lg-block p-2" style="border-radius:10px;">
+      <header style="background:#f7f8fb;border-radius:0;">
+          <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" class="profile-thumbnail" loading="lazy">
+          <div class="profile-name">
+            <h3 data-toggle="popover"><a href="{{url_for('user_posts', username=message.author.username)}}" >{{message.author.username}}
+             {% if message.author.username in ["harun" , "bambi"] %}<img src="{{ url_for('static', filename='resources/' + 'verified.png') }}" style="width:17px;height:17px;margin-left: -5px;">{% endif %}
+           </a></h3>
+            <small>active {{ moment(message.author.last_seen).fromNow() }}</small>
+          </div>
+          <div class="follow-btn">
+            <small>
+            {% if message.author != current_user and not current_user.is_following(message.author) %}
+              <a href="{{ url_for('follow', username=message.author.username) }}" style="text-decoration:none;">follow ·</a>
+            {% endif %}
+            </small>
+            <small><a class="pl-1" href="{{ url_for('message',recipient=message.author.username) }}" style="text-decoration:none;">reply</a></small>
+          </div>
+        </header>
+
+        <div id="inner">
+
+          <p class="pl-2"><a href="{{ url_for('message',recipient=message.author.username) }}" style="color:#000;text-decoration:none;">{{message.body | urlize(40, target='_blank')}}</a></p> <!-- removed | safe-->
+
+        </div>
+
+        <footer>
+            <div class="Retweets">
+               <small class="date text-muted" style="font-size:70%;">sent {{message.timestamp.strftime('%a %H:%M - %d / %b / %Y')}}</small>
+            </div>
+        </footer>
+    </div>
+  {% endfor %}
+  <div class="recent d-block d-lg-none">
+    <h2>Recent Chats</h2>
+        {% for person in recent_chats %}
+        <a href="{{url_for('message', recipient=person.username)}}" style="text-decoration:none;">
+        <header class="mb-2">
+        <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail" loading="lazy">
+        <div class="profile-name">
+          <h3>{{person.username}}</h3>
+          <span class="d-none">
+            {% set top_message = [] %}
+            {% for message in messages_received if message.author == person %}
+              {{ top_message.append(message.body) }}
+            {% endfor %}
+            </span>
+            <small title="{{top_message[0]}}">{{ top_message[0] | truncate(40) }}</small>
+            <!--<small class="text-muted" style="font-size:70%;">active {{ moment(person.last_seen).fromNow() }}</small>-->   
+        </div>
+      </header>
+      </a>
+      {% endfor %}
+  </div>
+  <div style="margin-bottom: 60px;"></div>
+</div>
+
+
+
+    <div class="col-lg-3 d-none d-lg-block position-fixed offset-sm-9">
+      
+</div>
+
+
+{% endblock content %}

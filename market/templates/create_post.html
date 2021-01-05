@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{{ pagedown.include_pagedown() }}
+
+	
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-3 d-none d-lg-block position-fixed">
+			
+		</div>
+
+		<div class="col-lg-6 offset-lg-3">
+			<h2 class="mt-1">New Post</h2>
+			<div class="post p-3">
+			  {% with messages = get_flashed_messages(with_categories=true) %}
+		    	{% if messages %}
+		      		{% for category , message in messages %}
+		        		<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+	      					{{message}}
+	        			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	          				<span aria-hidden="true">&times;</span>
+	        			</button>
+	      				</div>
+		      		{% endfor %}
+		    	{% endif %}
+	  		  {% endwith %}
+			  <div id="inner">
+			   <div class="content-section">
+				  <form method="POST" action="" enctype="multipart/form-data">
+				    {{ form.hidden_tag() }}
+				    <fieldset class="form-group">
+				      <div class="form-group">
+				        <!--{{ form.title.label(placeholder="Title", class="form-control-label") }}-->
+				        {% if form.title.errors %}
+				        {{ form.title(placeholder="Title", class="form-control form-control-lg is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.title.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.title(placeholder="Title", class="form-control form-control-lg") }}
+				        {% endif %}
+				      </div>
+				      <div class="form-group">
+				        <!--{{ form.content.label(placeholder="Product Description", class="form-control-label") }}-->
+				        {% if form.content.errors %}
+				        {{ form.content(placeholder="Product Description", class="form-control form-control-lg is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.content.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.content(placeholder="Product Description", class="form-control form-control-lg", rows="5") }}
+				        {% endif %}
+				      </div>
+				      <div class="form-group">
+				        <!--{{ form.image.label(class="form-control-label") }}-->
+				        {% if form.image.errors %}
+				        {{ form.image(class="form-control-file is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.image.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.image(class="form-control-file") }}
+				        {% endif %}
+				      </div>
+				     
+				     <div class="form-group">
+				        {% if form.price.errors %}
+				        {{ form.tags(placeholder="Price", class="form-control form-control-lg is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.price.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.price(placeholder="Price", class="form-control form-control-lg") }}
+				        {% endif %}
+				      </div>
+				    </div>
+				      
+				      <div class="form-group">
+				        {{ form.tags.label(placeholder="Tags", class="form-control-label") }}
+				        {% if form.tags.errors %}
+				        {{ form.tags(placeholder="Tags", class="form-control form-control-lg is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.tags.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.tags(placeholder="Tags", class="form-control form-control-lg") }}
+				        {% endif %}
+				      </div>
+				    </div>
+
+				     <!-- Optional Images -->
+		             <!-- <div class="mb-2" style="background:#212121;font-size:20px;display:block;border-radius:5px;">
+			          <a data-toggle="collapse" href="#dps" role="button" aria-expanded="false" aria-controls="dps" style="text-decoration:none;color:#818181;">📸 Optional Images ⤵</a>
+		              <div class="collapse" id="dps">
+		                <div class="mb-2">
+				        {% if form.image2.errors %}
+				        {{ form.image2(class="form-control-file is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.image2.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.image2(class="form-control-file") }}
+				        {% endif %}
+
+				        {% if form.image3.errors %}
+				        {{ form.image3(class="form-control-file is-invalid") }}
+				        <div class="invalid-feedback">
+				          {% for error in form.image3.errors %}
+				          <span>{{ error }}</span>
+				          {% endfor %}
+				        </div>
+				        {% else %}
+				        {{ form.image3(class="form-control-file") }}
+				        {% endif %}
+
+		                </div>
+		              </div>
+		          </div>-->
+
+
+				    <div class="form-check mb-2">
+		                {{ form.sold(class="form-check-input") }}
+		                {{ form.sold.label(class="form-check-label") }}
+		            </div>
+				    </fieldset>
+				    <div class="form-group">
+				      {{ form.submit(class="btn btn-warning btn-block") }}
+				    </div>
+				  </form>
+
+				  <br>
+
+			  </div>
+		</div>
+		<br>
+		<br>
+		</div>
+
+		<br>
+
+
+
+{% endblock content %}
