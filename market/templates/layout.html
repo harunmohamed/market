@@ -41,29 +41,32 @@
 
 <nav class="navbar navbar-expand-md navbar-dark sticky-top">
     <div>
-      <a class="navbar-brand ml-4" href="{{url_for('home')}}">
+      <a class="navbar-brand ml-4 pl-2" href="{{url_for('home')}}">
         <img src="{{ url_for('static', filename='resources/' + 'logo.svg') }}" width="50" height="50" alt="">
+        <span style="color:#8a9496;font-size:25px;">Bambi Market</span>
       </a>
     </div>
 
-    <div class="mx-auto" style="width:50px;">
+    <div class="mx-auto d-none d-lg-block" style="width:200px;">
       <form class="form-inline">
-      <input class="form-control form-control-sm" type="search" placeholder="🔍 Search" aria-label="Search">
+      <input class="form-control form-control-sm mt-1" type="search" placeholder="🔍 Search" aria-label="Search" style="height:30px">
     </form>
     </div>
 
-    <div class="form-inline my-2 mr-4">
+    <div class="form-inline my-2 mr-4 d-none d-lg-block">
       <ul class="navbar-nav">
       <li class="nav-item active">
         <a class="nav-link" href="{{url_for('home')}}"><i class="fas fa-home" style="color:#8a9496;font-size:25px"></i><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{url_for('messages')}}"><i class="far fa-envelope" style="color:#8a9496;font-size:25px"></i></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#"><i class="fas fa-heart" style="color:#8a9496;font-size:25px"></i></a>
+        <a class="nav-link" href="{{url_for('messages')}}">
+          <i class="far fa-envelope" style="color:#8a9496;font-size:25px"></i>
+        </a>
       </li>
       {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('likes', username=current_user.username) }}"><i class="fas fa-heart" style="color:#8a9496;font-size:25px"></i></a>
+      </li>
       <li class="nav-item dropleft">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#000;">
           <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" width="30" height="30" alt="" style="border:2px solid #8a9496;border-radius:50%;">

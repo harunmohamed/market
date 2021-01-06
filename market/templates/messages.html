@@ -33,7 +33,8 @@
         <header>
         <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail">
         <div class="profile-name">
-          <h3>{{person.username}}</h3>
+          <h3>{{person.name}}</h3>
+          <small>@{{person.username}}</small>
             <span class="d-none">
             {% set top_message = [] %}
             {% for message in messages_received if message.author == person %}

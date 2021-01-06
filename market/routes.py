@@ -41,7 +41,8 @@ def home():
 		return redirect(url_for('home'))
 	hour = datetime.now().hour
 	greeting = "Good morning" if 5<=hour<12 else "Good afternoon" if hour<18 else "Good evening"
-	posts = Post.query.filter_by(author=current_user).order_by(Post.date_posted.desc())
+	#posts = Post.query.filter_by(author=current_user).order_by(Post.date_posted.desc())
+	posts = Post.query.order_by(Post.date_posted.desc())
 	return render_template('home.html', posts=posts, title=current_user.username.title() + "'s Market", form=form, greeting=greeting)
 
 
@@ -53,7 +54,7 @@ def register():
 	form = RegistrationForm()
 	if form.validate_on_submit():
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		user = User(name=form.username.name, username=form.username.data.lower(), email=form.email.data, password=hashed_password)
+		user = User(name=form.username.data, username=form.username.data.lower(), email=form.email.data, password=hashed_password)
 		db.session.add(user)
 		db.session.commit()
 		flash(f'Account Created for {form.username.data}! You can now log in', 'info')
@@ -125,7 +126,8 @@ def update_post(post_id):
 		post.tags = form.tags.data
 		post.price = form.price.data
 		post.sold = form.sold.data
-		post.image = post_img(form.image.data)
+		if form.image.data:
+			post.image = post_img(form.image.data)
 		db.session.commit()
 		flash('Your post has been updated!', 'info')
 		return redirect(url_for('post', post_id=post.id))
@@ -150,6 +152,32 @@ def delete_post(post_id):
 	db.session.commit()
 	flash('Your post has been deleted!', 'info')
 	return redirect(url_for('home'))
+
+
+@app.route('/like/<int:post_id>/<action>')
+@login_required
+def like_action(post_id, action):
+	post = Post.query.filter_by(id=post_id).first_or_404()
+	if action == 'like':
+		current_user.like_post(post)
+		db.session.commit()
+	if action == 'unlike':
+		current_user.unlike_post(post)
+		db.session.commit()
+	return redirect(request.referrer)
+
+@app.route("/<string:username>/likes", methods=['GET', 'POST'])
+@login_required
+def likes(username):
+	username = username.lower()
+	user = User.query.filter_by(username=username).first_or_404()
+	posts = Post.query.order_by(Post.date_posted.desc())
+	users = User.query.all()
+	liked_people = set()
+	for post in posts:
+		if user.has_liked_post(post):
+			liked_people.add(post.author)
+	return render_template('user_likes.html', user=user, posts=posts, users=users, liked_people=liked_people, title= user.username.title() + "'s Likes")
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
@@ -242,6 +270,41 @@ def messages():
 	hour = datetime.now().hour
 	greeting = "Good morning" if 5<=hour<12 else "Good afternoon" if hour<18 else "Good evening"
 	return render_template('messages.html', users=users, greeting=greeting, recent_chats=recent_chats, messages_sent=messages_sent, messages_received=messages_received)
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+	username = username.lower()
+	user = User.query.filter_by(username=username).first()
+	if user is None:
+		flash('User {} not found.'.format(username))
+		return redirect(url_for('index'))
+	if user == current_user:
+		flash('You cannot follow yourself!', 'danger')
+		return redirect(request.referrer)
+	current_user.follow(user)
+	db.session.commit()
+	flash('💛 You are following {}!'.format(username.title()), 'info')
+	return redirect(request.referrer)
+
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+	username = username.lower()
+	user = User.query.filter_by(username=username).first()
+	if user is None:
+		flash('User {} not found.'.format(username))
+		return redirect(url_for('index'))
+	if user == current_user:
+		flash('You cannot unfollow yourself!', 'danger')
+		return redirect(url_for('user_posts', username=username))
+	current_user.unfollow(user)
+	db.session.commit()
+	flash('💔 You are not following {}.'.format(username.title()), 'info')
+	return redirect(url_for('user_posts', username=username))
+
+
 
 @app.route('/account/delete')
 @login_required

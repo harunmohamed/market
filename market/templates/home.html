@@ -14,8 +14,16 @@
         <a href="{{ url_for('post', post_id=post.id) }}">
         <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}">
         </a>
-        {% if post.author != current_user %}
-          <i class="fas fa-heart love" style="font-size:26px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+        {% if post.author != current_user%}
+          {% if current_user.has_liked_post(post) %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:red;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {% else %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:#fff;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {%endif%}
         {% else %}
                 <div class="dropleft" style="position:absolute;top:8px;right:8px;">
                 <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;border:none;">

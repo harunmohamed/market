@@ -213,13 +213,7 @@ section .btn {
         }
     }
 }
-.container-fluid .dropdown a{
-  border-top: 1px solid #121212;
-  color:#fff;
-}
-.container-fluid .dropdown a:hover{
-  color:#000;
-}
+
 </style>
 
 
@@ -236,7 +230,7 @@ section .btn {
 
       <div class="profile-user-settings" style="display:flex;">
 
-        <h2 class="profile-user-name">{{user.username.title()}}
+        <h2 class="profile-user-name">{{user.name}}
           {% if user.username in ["harun" , "bambi"] %}
           <img src="{{ url_for('static', filename='resources/' + 'verified.png') }}" style="width:20px;height:20px;margin-left: -5px;" title="Verified"> 
           {% endif %}
@@ -270,7 +264,7 @@ section .btn {
 
 
         <ul>
-          <li style="font-size:22px;" {% if user == current_user %} data-toggle="modal" data-target="#mutual" {% endif %}><span class="profile-stat-count">{{posts.total}}</span> <small>posts</small></li>
+          <li style="font-size:22px;" {% if user == current_user %} data-toggle="modal" data-target="#mutual" {% endif %}><span class="profile-stat-count">{{posts.count()}}</span> <small>posts</small></li>
           <li style="font-size: 22px;" {% if user == current_user %} data-toggle="modal" data-target="#followers" {% endif %}><span class="profile-stat-count">{{ user.followers.count() }}</span> <small>followers</small></li>
           <li style="font-size: 22px;" {% if user == current_user %} data-toggle="modal" data-target="#following" {% endif %}><span class="profile-stat-count">{{ user.followed.count() }}</span> <small>following</small></li>
         </ul>
@@ -294,17 +288,17 @@ section .btn {
           <code style="color:#000;font-size:18px;">
           <!-- if current_user is not following user -->
           {% if user != current_user and not current_user.is_following(user) %}
-            <a class="badge badge-info p-2" href="{{ url_for('follow', username=user.username) }}" style="color:#000;">🔅 Follow</a>
+            <a class="badge badge-info p-2" href="{{ url_for('follow', username=user.username) }}">🔅 Follow</a>
           {% endif %}
           <!-- if current_user is user -->
           {% if user == current_user %}
-            <a class="badge badge-info p-2" href="{{ url_for('messages') }}" style="color:#000;">📬 Inbox <span id="message_count" class="badge badge-warning" style="display:{% if new_messages %}inline{% else %}none{% endif %};">{{ new_messages }}</span></a>
-            <a class="badge badge-info p-2" href="{{url_for('account')}}" style="color:#000;">⚜ Edit Profile</a>
+            <a class="badge badge-info p-2" href="{{ url_for('messages') }}">🔐 Messages <span id="message_count" class="badge badge-warning" style="display:{% if new_messages %}inline{% else %}none{% endif %};">{{ new_messages }}</span></a>
+            <a class="badge badge-info p-2" href="{{url_for('account')}}">⚜ Edit Profile</a>
           {% endif %}
           <!-- if current_user is following user -->
           {% if current_user != user and current_user.is_following(user) %}
-            <a class="badge badge-info p-2" href="{{ url_for('message',recipient=user.username) }}" style="color:#000;">📧 Message</a>
-            <a class="badge badge-danger p-2" href="{{ url_for('unfollow', username=user.username) }}" style="color:#000;">👽 Unfollow</a>
+            <a class="badge badge-info p-2" href="{{ url_for('message',recipient=user.username) }}">📧 Message</a>
+            <a class="badge badge-danger p-2" href="{{ url_for('unfollow', username=user.username) }}">👽 Unfollow</a>
           {% endif %}
           </code>
         </div>
@@ -335,7 +329,15 @@ section .btn {
         <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}">
         </a>
         {% if post.author != current_user %}
-          <i class="fas fa-heart love" style="font-size:26px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+          {% if current_user.has_liked_post(post) %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:red;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {% else %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:#fff;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {%endif%}
         {% else %}
                 <div class="dropleft" style="position:absolute;top:8px;right:8px;">
                 <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;border:none;">
