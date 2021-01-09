@@ -275,7 +275,7 @@ section .btn {
 
         <p class="mb-2" style="font-size:18px;">
             <!--<code>{% if user.email %} {{user.email.split("@")[0] | lower}} {% endif %} - </code>-->
-            <code>{{user.name.lower()}} - </code>
+            <code>{{user.username.lower()}} - </code>
             {% if user.bio %}
             <code style="color:#000;">{{user.bio}}</code> <!-- removed | safe -->
             {% else %}

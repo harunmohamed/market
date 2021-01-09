@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<style>
+  #new_post{
+    display: none;
+  }
+</style>
 
 <div class="container-fluid">
   <div class="row">
@@ -17,13 +22,13 @@
       {% for person in recent_chats %}
       <a href="{{ url_for('message',recipient=person.username) }}" style="text-decoration:none;">
       <header class="mb-2">
-        <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail">
+        <img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail" style="border:2px solid #8a9496;">
         <div class="profile-name">
           <h3>{{person.name}}</h3>
           <!--{% for message in received_all if person == message.author %}
           <small title="">{{ message.body | truncate(45) }}</small>
           {% endfor %}-->
-          <small class="text-muted">@{{ current_user.username }}</small>
+          <small class="text-muted">@{{ person.username }}</small>
         </div>
       </header>
       </a>
@@ -57,7 +62,7 @@
           {% endif %}">
 
           {% if message.author != current_user %}
-          <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" title="{{message.author.username.lower()}}" style="width:30px;height:30px;border-radius:50%">
+          <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" title="{{message.author.username.lower()}}" style="width:30px;height:30px;border-radius:50%;border:2px solid #8a9496;">
           {% endif %} 
 
           {{message.body | urlize(40, target='_blank')}} 
@@ -69,9 +74,9 @@
 
         {% else %}
             <!-- if chat has no messages -->
-            <p class="mb-2" style="text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;">
+            <p class="mb-2" style="text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff">
 
-            <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="profile pic"style="width:35px;height:35px;border-radius:50%">
+            <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="profile pic"style="border:2px solid #8a9496;width:35px;height:35px;border-radius:50%">
 
             Hey {{current_user.username.title()}}, say something nice to {{user.username}}. How is that for a start? 😉🍻
 
