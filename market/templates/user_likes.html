@@ -138,7 +138,7 @@
         </footer>
     </div>
   {% endfor %}
-    <div style="margin-bottom: 40px;"></div>
+    <div style="margin-bottom: 100px;"></div>
 </div>
 
 
@@ -162,7 +162,7 @@
       <div style="padding:7px;cursor:pointer;border-radius:5px;overflow:auto;height:318px;">
         {% if current_user != user %}<h5 style="padding-left: 3px;">People {{user.username.title()}} Likes</h5>{% else %} <h5>People I Like</h5>{% endif %}
         {% for person in liked_people %}
-        <header>
+        <header class="mb-2">
         <a href="{{url_for('user_posts', username=person.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail"></a>
         <div class="profile-name">
           <h3>{{person.name}}</h3>

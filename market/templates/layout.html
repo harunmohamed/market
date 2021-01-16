@@ -56,7 +56,7 @@
     <div class="form-inline my-2 mr-4 d-none d-lg-block">
       <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="{{url_for('home')}}"><i class="fas fa-home" style="color:#8a9496;font-size:25px"></i><span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{url_for('new_post')}}"><i class="far fa-plus-square" style="color:#8a9496;font-size:25px"></i><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('messages')}}">
@@ -65,7 +65,7 @@
       </li>
       {% if current_user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('likes', username=current_user.username) }}"><i class="fas fa-heart" style="color:#8a9496;font-size:25px"></i></a>
+        <a class="nav-link" href="{{ url_for('likes', username=current_user.username) }}"><i class="far fa-heart" style="color:#8a9496;font-size:25px"></i></a>
       </li>
       <li class="nav-item dropleft">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#000;">
@@ -93,9 +93,51 @@
 
   {% block content %} {% endblock %}
 
-  <div id="new_post" class="">
+
+  <!-- Mobile Navbar -->
+{% if current_user.is_authenticated %}
+
+  <!-- New Product Button -->
+  <!--<div id="new_post" class="d-none d-lg-block">
     <button class="post_btn"><a href="{{ url_for('new_post') }}">📝</a></button>
-  </div>
+  </div>-->
+
+    <div class="bottom d-block d-sm-none" style="padding-top:2px;">
+      <a href="{{ url_for('home') }}" {% if '/home' == request.path %}  class="active" {% endif %}>
+        <i class="fas fa-home" style="color:#8a9496;font-size:25px"></i>
+      </a>
+
+      <a href="{{ url_for('likes', username=current_user.username) }}" {% if '/likes/{{current_user.username}}' == request.path %}  class="active" {% endif %}>
+        <i class="far fa-heart" style="color:#8a9496;font-size:25px"></i>
+      </a>
+
+      <a href="{{ url_for('new_post') }}" {% if '/post/new' == request.path %}  class="active" {% endif %}><i class="far fa-plus-square" style="color:#8a9496;font-size:25px"></i>
+      </a>
+
+      <a href="{{ url_for('messages') }}" {% if '/messages' == request.path %}  class="active" {% endif %}>
+        <i class="far fa-envelope" style="color:#8a9496;font-size:25px"></i>
+      </a>
+
+      <a href="{{url_for('user_posts', username=current_user.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" style="width:28px;height:28px;border-radius:50%;border:2px solid #8a9496;" alt="profile">
+      </a>
+
+
+    </div>
+
+
+    {% else %}
+    <div class="bottom d-block d-sm-none">
+
+      <a href="{{ url_for('register') }}" style="font-size:30px;cursor:pointer;width:33.3%;"><img src="{{ url_for('static', filename='resources/' + 'guest.png') }}" style="width:30px;height:30px;margin-bottom:20px;"></a>
+
+      <a href="{{ url_for('home') }}" style="width:33.3%;"><img src="{{ url_for('static', filename='resources/' + 'logo.svg') }}" style="width:35px;height:35px;"class="d-inline-block align-top" alt=""></a>
+
+      <a href="{{ url_for('login') }}" style="font-size:30px;cursor:pointer;width:33.3%;" data-toggle="popover" data-content="🍌: Log In"><img src="{{ url_for('static', filename='resources/' + 'login.svg') }}" style="width:30px;height:30px;margin-bottom:20px;"></a>
+
+    </div>
+    {% endif %}
+
+
     
 
 

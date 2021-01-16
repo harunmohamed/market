@@ -155,23 +155,6 @@ header{
   font-weight: 400;
   font-size: 1.4rem;
  }
- .post_btn{
-  background-color : #f8f9fc;
-  color: #fff;
-  padding: 10px 20px;
-  border:none;
-  outline:none;
-  border:2px solid #ccc;
-  padding: 2px;
-  border-radius: 50%;
-  height:70px;
-  width:70px;
-}
-#new_post{
-  position: fixed;
-  bottom: 20px;
-  right: 30px;
-}
 .liked {
   color: red;
 }
@@ -258,15 +241,15 @@ header{
 
 /*LAYOUTS*/
 .post_btn{
-  background-color: #212121;
-    color: #F9E9C8;
-    outline: none;
-    border: 4px solid #FE3C72;
-    padding: 2px;
-    border-radius: 50%;
-    height: 70px;
-    width: 70px;
-    font-size: 30px;
+  background-color: #f2f3f6;
+  color: #F9E9C8;
+  outline: none;
+  border: 4px solid #1cc88a;
+  padding: 2px;
+  border-radius: 50%;
+  height: 70px;
+  width: 70px;
+  font-size: 30px;
 }
 .post_btn:hover{
   outline: none;
@@ -309,10 +292,12 @@ header{
 }
 .bottom {
   overflow: hidden;
-  background-color: #121212;
+  background:#f2f3f6;
+  border-top:1px solid #ccc;
   position: fixed;
   bottom: 0;
   width: 100%;
+  left: 0;
   }
 
 .bottom a {
