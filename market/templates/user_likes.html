@@ -4,196 +4,119 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-3 d-none d-lg-block position-fixed">
-      <!-- User info , photos -->
-      {% if current_user.is_authenticated %}
-      <a href="{{ url_for('user_posts',username=current_user.username) }}" style="text-decoration:none;">
-      <header class="mb-2">
-        <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="default profile" class="profile-thumbnail">
-        <div class="profile-name">
-          <h3>{{current_user.name}}</h3>
-          <small>@{{current_user.username}}</small>
-        </div>
-      </header>
-    </a>
+ 
+    <div class="col-lg-1"></div>
+
+    <div class="col-lg-10">
 
 
-    <div class="menu mb-2" style="border-radius:10px">
-      
-    </div>
-
-  <header data-toggle="popover" data-content="🍌: Click to know more about Bambi">
-    <a href="#" target="_blank" style="color: #F9E9C8;text-decoration: none;">
-    <img src="{{ url_for('static', filename='resources/' + 'logo.svg') }}" alt="logo" class="profile-thumbnail">
-    <div class="profile-name">
-      <h3 style="color:#000;">BAMBI</h3>
-      <small id="year"></small>
-    </a>
-    </div>
-  </header>
-  {% endif %}
-</div>
-
-
-
-    <div class="col-lg-6 offset-lg-3">
-      <!-- content area -->
-
-      {% if current_user != user %}<h2>{{user.username.title()}}'s Likes</h2> {% else %} <h2>My Likes</h2> {% endif %}
-   {% for post in posts if user.has_liked_post(post) %}
-    <div class="post mb-2 p-3">
-      <header class="pb-0" style="padding:0;">
-          <img src="{{ url_for('static', filename='profile_pics/' + post.author.dp) }}" alt="profile pic" class="profile-thumbnail">
-          <div class="profile-name">
-            <h3 data-toggle="popover"><a href="{{url_for('user_posts', username=post.author.username)}}" style="color:#000;">  {{post.author.name}}
-             {% if post.author.username in ["harun" , "bambi"] %}<img src="{{ url_for('static', filename='resources/' + 'correct.png') }}" style="width:20px;height:20px;margin-left: -5px;">{% endif %}
-           </a></h3>
-           <small>@{{post.author.email.split("@")[0] | lower}}</small>
-          </div>
-          <div class="follow-btn">
-            {% if post.author != current_user %}
-              <!--<i class="fas fa-heart love" style="font-size: 28px;"></i>-->
-              {% if current_user.has_liked_post(post) %}
-                <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">❤</a>
-              {% else %}
-                <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">👍</a>
-              {% endif %}
-            {% else %}
-            <div class="dropdown dropleft">
-            <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;">
-              <i class="fas fa-ellipsis-v" style="font-size: 28px;"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
-              <a class="btn btn-warning btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}">✏edit</a>
-              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">🗑️delete</button>
+      <!-- Liked Accounts -->
+      <h2 class="mt-1">Suggested Accounts</h2>
+          <section class="cardi scroll mb-2">
+            {% for person in liked_people if not current_user.is_following(person) %}
+            <div class="others">
+            <div class="card--content">
+             <a href="{{url_for('user_posts', username=person.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail"></a>
             </div>
-             <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel" style="color:#000;">Delete Post?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
-                      <input class="btn btn-danger" type="submit" value="Delete">
-                    </form>
+            <small style="font-size:15px;color:#f8f8f2;padding-left:15px">
+            <code style="color:#000;">{{person.username.lower()}}</code>
+            {% if person.username in ["harun" , "bambi"] %}<img src="{{ url_for('static', filename='resources/' + 'verified.png') }}" style="width:15px;height:15px;">{% endif %}
+          </small>
+            </div>
+            {% endfor %}
+            <div class="card--content"></div>
+            <div class="card--content"></div>
+            <div class="card--content"></div>
+          </section>
+
+
+
+     <div class="card-columns">
+   {% for post in posts if user.has_liked_post(post) %}
+      <div class="card" style="border-radius:10px;">
+        <a href="{{ url_for('post', post_id=post.id) }}">
+        <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}">
+        </a>
+        {% if post.author != current_user%}
+          {% if current_user.has_liked_post(post) %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:red;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {% else %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:#fff;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {%endif%}
+        {% else %}
+                <div class="dropleft" style="position:absolute;top:8px;right:8px;">
+                <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;border:none;">
+                  <i class="fas fa-ellipsis-v" style="font-size: 28px;text-shadow: 0 0 3px #212121;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
+                  <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float:right;">🗑️delete</button>
+                </div>
+                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel" style="color:#000;">Delete post?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                          <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-            {% endif %}
-          </div>
-        </header>
-
-        <div id="inner" class="mb-2">
-          <p  class="mt-1" style="font-size:30px;"><a href=" {{ url_for('post', post_id=post.id) }} " style="color:#000;text-decoration:none;">{{post.title}}</a></p>
-          {% if post.image %}
-          <a href=" {{ url_for('post', post_id=post.id) }} " style="color:#fff;text-decoration:none;">
-            <img class="mb-2" src="{{ url_for('static', filename='posts/' + post.image) }}" style="width:100%;height:100%;border-radius:5px;">
-          </a>
-          {% endif %}
-          <p>
-            <a href=" {{ url_for('post', post_id=post.id) }} " style="color:#000;text-decoration:none;">{{post.content| truncate(420) | safe | urlize(40, target='_blank')}}</a> <br>
-            <small>{{post.tags}}</small>
-            {% set words = post.content.split() %}
-            {% if words|count > 60 %}<a class="badge badge-danger" href="{{url_for('post', post_id=post.id)}}">👀read more</a>{% endif %}
-          </p>
-        </div>
-
-        <div style="max-height:250px;overflow:auto" class="mb-2">
-            {% if post.comments.count() > 0 %}<code>{{post.comments.count()}} comments</code><br>{% endif %}
-            {% for comment in post.comments if current_user.is_authenticated %}
-            <a href="{{url_for('user_posts', username=comment.author.username)}}">
-              <img src="{{ url_for('static', filename='profile_pics/' + comment.author.dp) }}" style="width:20px;height:20px;border-radius:50%;"></a>
-                <span>
-                  <span style="color:#1e90ff;">{{comment.author.username}}:</span> 
-                  <span style="color:#fff;">{{comment.body}}</span> <br>
-                  <small class="text-muted ml-4">{{ moment(comment.date_posted).fromNow() }}</small>
-                </span> <br>
-            {% endfor %}
-        </div>
-
-        <footer>
-          <div class="stats">
-            <div class="Retweets">
-              {% set words = post.content.split() %}
-               <a class="btn btn-sm btn-outline-dark p-1" data-toggle="popover" data-content="liked by {% for user in users if user.has_liked_post(post) %} {{user.username}}, {% endfor %}">❤ {{ post.likes.count() }} </a> 
-               
-               <a class="btn btn-sm btn-outline-dark p-1 ml-1" title="{{post.date_posted.strftime('%a, %b %d, %Y at %H:%M:%S')}}">⏳ {{post.date_posted.strftime('%a, %d %b')}}</a>
-
-               {% if words | count > 60 %} 
-               <a class="btn btn-sm btn-outline-dark p-1">{{words | count}} words</a> 
-               {% endif %}
-
-               {% if current_user.is_authenticated %}
-                <a class="btn btn-sm btn-outline-dark p-1 ml-1" href="{{url_for('post', post_id=post.id)}}">💭comment</a> 
-                {% endif %}
-            </div>
-          </div>
-        </footer>
-    </div>
-  {% endfor %}
-    <div style="margin-bottom: 100px;"></div>
-</div>
-
-
-
-    <div class="col-lg-3 d-none d-lg-block position-fixed offset-lg-9">
-      {% if current_user.is_authenticated %}
-      <!-- notifications and relevant ads -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category , message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{message}}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              </div>
-            {% endfor %}
         {% endif %}
-      {% endwith %}
-      {% endif %}
-      <div style="padding:7px;cursor:pointer;border-radius:5px;overflow:auto;height:318px;">
-        {% if current_user != user %}<h5 style="padding-left: 3px;">People {{user.username.title()}} Likes</h5>{% else %} <h5>People I Like</h5>{% endif %}
-        {% for person in liked_people %}
-        <header class="mb-2">
-        <a href="{{url_for('user_posts', username=person.username)}}"><img src="{{ url_for('static', filename='profile_pics/' + person.dp) }}" alt="default profile" class="profile-thumbnail"></a>
-        <div class="profile-name">
-          <h3>{{person.name}}</h3>
-          <small>@{{person.username}}</small>
+
+
+
+
+        <div class="card-block p-2" style="background:#f8f9fc;box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15);border-radius:10px;">
+          <span style="text-transform:uppercase;font-weight:700;font-size:12px;letter-spacing:1.5px;">{{post.title}} • {{post.date_posted.strftime('%a, %d %b')}}</span> <br>
+
+          <span class="card-title" style="font-size:30px;color:#1e90ff;">{{post.price}}</span> <br>
+          <code style="color:#000;">{{post.content}}</code> <br>
+
+          <small>📌 {{post.author.location}}</small>
+          <small class="pl-3">📞 {{post.author.contact}}</small>
+          {% if post.author != current_user %}
+            <a href="{{ url_for('message',recipient=post.author.username) }}"><small class="pl-3">💬 DM</small></a>
+          {% endif %}
+
+          <div style="display:flex;" class="mt-3">
+            <a href="{{url_for('user_posts', username=post.author.username)}}" style="color:#fff;">
+            <img src="{{ url_for('static', filename='profile_pics/' + post.author.dp) }}" style="height:45px;width:45px;border-radius:50%;"></a>
+            <p class="ml-2" style="font-size:14px;font-weight:600;">{{post.author.name}} <br>
+            <small>@{{post.author.username}}</small>
+            </p>
+          </div><!--seller div-->
+
         </div>
-        <div class="follow-btn">
-            {% if person != current_user and not current_user.is_following(person) %}<a href="{{ url_for('follow', username=person.username) }}" style="font-size:12px;text-decoration:none;">Follow</a>{% endif %}
-          </div>
-      </header>
-      {% endfor %}
-      </div>
+      </div><!--card-->
+   {% endfor %}
+  </div><!--card-columns-->
+
+  <div style="margin-bottom: 100px;"></div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
 
-  <script>
-     $('.love').click(function(){
-      $(this).toggleClass('liked');
-    });
-  </script>
 
-  <script>
-$(document).ready(function(){
-  $('[data-toggle="popover"]').popover({
-    trigger: 'hover'
-  }); 
-});
-</script>
+    <!--<div class="col-lg-3 d-none d-lg-block position-fixed offset-sm-9">
+      
+</div>-->
 
-<script id="dsq-count-scr" src="//baambi.disqus.com/count.js" async></script>
+</div>
+
+
 
 {% endblock content %}
+
+

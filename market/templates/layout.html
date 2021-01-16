@@ -55,17 +55,17 @@
 
     <div class="form-inline my-2 mr-4 d-none d-lg-block">
       <ul class="navbar-nav">
+      {% if current_user.is_authenticated %}
       <li class="nav-item active">
         <a class="nav-link" href="{{url_for('new_post')}}"><i class="far fa-plus-square" style="color:#8a9496;font-size:25px"></i><span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('likes', username=current_user.username) }}"><i class="far fa-heart" style="color:#8a9496;font-size:25px"></i></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('messages')}}">
           <i class="far fa-envelope" style="color:#8a9496;font-size:25px"></i>
         </a>
-      </li>
-      {% if current_user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('likes', username=current_user.username) }}"><i class="far fa-heart" style="color:#8a9496;font-size:25px"></i></a>
       </li>
       <li class="nav-item dropleft">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#000;">
@@ -78,6 +78,13 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{url_for('logout')}}">Log Out</a>
         </div>
+      </li>
+      {% else %}
+        <li class="nav-item active">
+        <a class="btn btn-sm btn-success mr-2" href="{{url_for('login')}}" style="background:#1cc88a;">Login</a>
+      </li>
+      <li class="nav-item active">
+        <a class="btn btn-sm btn-outline-success mr-2" href="{{url_for('register')}}">Sign up</a>
       </li>
       {% endif %}
     </ul>
