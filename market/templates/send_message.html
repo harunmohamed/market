@@ -8,6 +8,16 @@
   .bottom{
     display: none !important;
   }
+  @media only screen and (min-width: 600px) {
+  .msg-box {
+    height: 460px;
+  }
+}
+  @media only screen and (max-width: 600px) {
+  .msg-box {
+    height: 385px;
+  }
+}
 </style>
 
 <div class="container-fluid">
@@ -52,50 +62,48 @@
              {% endif %}
            </a></h3>
 
-           <div style="overflow-y:auto;height:460px;padding:5px;">
+           <div class="msg-box" style="overflow-y:auto;padding:5px;">
+              {% for message in messages %}
+                  <p class="mb-2" 
+                  style="
+                  {% if message.author == current_user%}
+                    text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff;
+                  {%else%}
+                    text-align:left;padding:5px;border-radius:10px;display:inline-block;max-width:75%;border:2px solid #ccc;
+                  {% endif %}">
+
+                  {% if message.author != current_user %}
+                  <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" title="{{message.author.username.lower()}}" style="width:30px;height:30px;border-radius:50%;border:2px solid #8a9496;">
+                  {% endif %} 
+
+                  {{message.body | urlize(40, target='_blank')}} 
+                  <!--{{message.body | safe | urlize(40, target='_blank')}}-->
+                  <br>
+                  <small style="display:inline-block;float:right;">{{message.timestamp.strftime('%a %H:%M')}}</small>
+                </p>
+                <br>
+
+                {% else %}
+                    <!-- if chat has no messages -->
+                    <p class="mb-2" style="text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff">
+
+                    <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="profile pic"style="border:2px solid #8a9496;width:35px;height:35px;border-radius:50%">
+
+                    Hey {{current_user.username.title()}}, say something nice to {{user.username}}. How is that for a start? 😉🍻
+
+                    </p>
 
 
-      {% for message in messages %}
-          <p class="mb-2" 
-          style="
-          {% if message.author == current_user%}
-            text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff;
-          {%else%}
-            text-align:left;padding:5px;border-radius:10px;display:inline-block;max-width:75%;border:2px solid #ccc;
-          {% endif %}">
+                {% endfor %}
 
-          {% if message.author != current_user %}
-          <img src="{{ url_for('static', filename='profile_pics/' + message.author.dp) }}" alt="profile pic" title="{{message.author.username.lower()}}" style="width:30px;height:30px;border-radius:50%;border:2px solid #8a9496;">
-          {% endif %} 
+                <div id="chat_bottom"></div>
 
-          {{message.body | urlize(40, target='_blank')}} 
-          <!--{{message.body | safe | urlize(40, target='_blank')}}-->
-          <br>
-          <small style="display:inline-block;float:right;">{{message.timestamp.strftime('%a %H:%M')}}</small>
-        </p>
-        <br>
+            </div>
 
-        {% else %}
-            <!-- if chat has no messages -->
-            <p class="mb-2" style="text-align:left;padding:5px;border-radius:10px;display:inline-block;float:right;clear:both;max-width:75%;background:#fff">
-
-            <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" alt="profile pic"style="border:2px solid #8a9496;width:35px;height:35px;border-radius:50%">
-
-            Hey {{current_user.username.title()}}, say something nice to {{user.username}}. How is that for a start? 😉🍻
-
-            </p>
-
-
-        {% endfor %}
-
-        <div id="chat_bottom"></div>
-
-        </div>
-
-      <div class="post" style="background:none;width:95%;">
+      <div class="post" style="width:100%;left:0;">
           <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div class="input-group mt-2 mr-2" style="overflow:hidden">
+            <div class="input-group mt-2 mr-2" style="overflow:hidden;">
               {% if form.message.errors %}
                 {{ form.message(class="form-control border-0 rounded-0 resize-none", placeholder="type message...") }}
                 <div class="invalid-feedback">
@@ -111,7 +119,7 @@
                   </div>
               </div>
           </form>
-  </div>
+      </div>
 
 </div>
 
