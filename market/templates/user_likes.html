@@ -35,7 +35,7 @@
    {% for post in posts if user.has_liked_post(post) %}
       <div class="card" style="border-radius:10px;">
         <a href="{{ url_for('post', post_id=post.id) }}">
-        <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}">
+        <img class="card-img-top img-fluid" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}" style="max-height:350px;">
         </a>
         {% if post.author != current_user%}
           {% if current_user.has_liked_post(post) %}
