@@ -13,13 +13,13 @@
     <meta property="og:description" content="Bambi Diary is a journalling web application built by Harun Mohamed">
     <meta property="og:url" content="http://bambi.app/">
     <meta property="og:site_name" content="Bambi">
-    <meta property="og:image" content="{{ url_for('static', filename='resources/' + 'thumbnail.jpg') }}">
+    <meta property="og:image" content="{{ url_for('static', filename='resources/' + 'favicon.png') }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:description" content="Bambi Diary is a journalling web application built by Harun Mohamed">
     <meta name="twitter:title" content="Bambi Diary">
     <meta name="twitter:domain" content="Bambi">
     <meta name="twitter:creator" content="@harunnmohamed">
-    <meta name="twitter:image:src" content="{{ url_for('static', filename='resources/' + 'thumbnail.jpg') }}">
+    <meta name="twitter:image:src" content="{{ url_for('static', filename='resources/' + 'favicon.png') }}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -29,7 +29,7 @@
     <!--Font awesome kit -->
     <script src="https://kit.fontawesome.com/17192b7610.js"></script>
 
-    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='resources/' + 'logo.svg') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='resources/' + 'favicon.png') }}">
     {% if title %}
       <title>{{ title }}</title>
     {% else %}
@@ -42,8 +42,8 @@
 <nav class="navbar navbar-expand-md navbar-dark sticky-top">
     <div>
       <a class="navbar-brand ml-4 pl-2" href="{{url_for('home')}}">
-        <img src="{{ url_for('static', filename='resources/' + 'logo.svg') }}" width="50" height="50" alt="">
-        <span style="color:#8a9496;font-size:25px;">Bambi Market</span>
+        <img src="{{ url_for('static', filename='resources/' + 'uzza.png') }}" width="150" height="50" alt="">
+       <!--<span style="color:#8a9496;font-size:25px;">UZZA</span>-->
       </a>
     </div>
 
@@ -137,7 +137,7 @@
 
       <a href="{{ url_for('register') }}" style="font-size:30px;cursor:pointer;width:33.3%;"><img src="{{ url_for('static', filename='resources/' + 'guest.png') }}" style="width:30px;height:30px;margin-bottom:20px;"></a>
 
-      <a href="{{ url_for('home') }}" style="width:33.3%;"><img src="{{ url_for('static', filename='resources/' + 'logo.svg') }}" style="width:35px;height:35px;"class="d-inline-block align-top" alt=""></a>
+      <a href="{{ url_for('home') }}" style="width:33.3%;"><img src="{{ url_for('static', filename='resources/' + 'favicon.png') }}" style="width:35px;height:35px;"class="d-inline-block align-top" alt=""></a>
 
       <a href="{{ url_for('login') }}" style="font-size:30px;cursor:pointer;width:33.3%;" data-toggle="popover" data-content="🍌: Log In"><img src="{{ url_for('static', filename='resources/' + 'login.svg') }}" style="width:30px;height:30px;margin-bottom:20px;"></a>
 

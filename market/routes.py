@@ -28,9 +28,10 @@ def landing():
 
 @app.route('/')
 @app.route('/home', methods=['GET', 'POST'])
+@login_required
 def home():
-	if not current_user.is_authenticated:
-		return redirect(url_for('landing'))
+	#if not current_user.is_authenticated:
+		#return redirect(url_for('landing'))
 	form = HomeForm()
 	if form.validate_on_submit():
 		if form.image.data:

@@ -4,98 +4,253 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-3 d-none d-lg-block position-fixed">
+    <div class="col-lg-1 d-none d-lg-block position-fixed">
      
 </div>
 
 
 
-    <div class="col-lg-6 offset-lg-3 mb-4">
-    <div class="post p-3">
-      <header class="pb-0" style="padding:0;background:#f8f9fc">
-          <img src="{{ url_for('static', filename='profile_pics/' + post.author.dp) }}" alt="dp" class="profile-thumbnail">
-          <div class="profile-name">
-              <h3 data-toggle="popover"><a href="{{url_for('user_posts', username=post.author.username)}}" style="color:#000;">  {{post.author.name}}
-               {% if post.author.username in ["harun" , "bambi"] %}<img src="https://image.flaticon.com/icons/svg/1271/1271380.svg" style="width:17px;height:17px;margin-left: -5px;">{% endif %}
-             </a> {% if post.author != current_user and not current_user.is_following(post.author) %}<a class="pt-2 pl-2" href="{{ url_for('follow', username=post.author.username) }}" style="font-size:12px;text-decoration:none;">· Follow</a>{% endif %}</h3>
-             <small>@{{post.author.username}}</small>
-          </div>
-           <div class="follow-btn">
-            {% if post.author != current_user %}
-              <!--<i class="fas fa-heart love" style="font-size: 28px;"></i>-->
-              {% if current_user.has_liked_post(post) %}
-                <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">❤</a>
-              {% else %}
-                <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">👍</a>
-              {% endif %}
-            {% else %}
-              <div class="dropdown dropleft">
-            <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;">
-              <i class="fas fa-ellipsis-v" style="font-size:28px;color:#ccc;"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
-              <a class="btn btn-warning btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}">✏edit</a>
-              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">🗑️delete</button>
-            </div>
-            {% endif %}
-          </div>
-        </header>
 
-        <div id="inner" style="background:#f8f9fc">
-          <p style="font-size:30px;color:#000;">{{post.title}} - {{post.price}}</p>
-          {% if post.image %}
-          <img class="mb-2" src="{{ url_for('static', filename='posts/' + post.image) }}" style="width:100%;height:100%;border-radius:5px;">
-          {% endif %}
-          <p>
-            {{post.content| safe | urlize(40, target='_blank')}} <br>
-            <small>{{post.tags}}</small>
-          </p>
-
-
-          {% set words = post.content.split() %}
-          <a class="btn btn-sm btn-outline-dark p-1 ml-1 mt-2">{{post.date_posted.strftime('%a %H:%M - %d / %b / %Y')}}</a> 
-          <!--('%a, %b %d, %Y at %H:%M:%S')-->
-          {% if words | count > 60 %}
-          <a class="btn btn-sm btn-outline-dark p-1 ml-1 mt-2">{{words | count}} words</a>
-          {% endif %}
-                            
-
-          <div class="comments mt-2">
-            <form method="POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-              <div class="row">
-                <div class="col-1">
-                  <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" style="width:30px;height:30px;border-radius:50%;margin-top:8px;">
+    <div class="col-lg-10 offset-lg-1 mb-4">
+      <div class="card" style="">
+            <div class="row no-gutters">
+                <div class="col-sm-5">
+                    <img class="card-img" src="{{ url_for('static', filename='posts/' + post.image) }}" alt="{{post.title}}" style="max-height:400px">
+                    {% if post.author != current_user%}
+          {% if current_user.has_liked_post(post) %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:red;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {% else %}
+              <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="text-decoration:none;font-size:30px;margin-top:-7px;">
+                <i class="fas fa-heart love" style="color:#fff;font-size:30px;position:absolute;top:8px;right:8px;text-shadow: 0 0 2px #212121;"></i>
+              </a>
+          {%endif%}
+        {% else %}
+                <div class="dropleft" style="position:absolute;top:8px;right:8px;">
+                <button class="btn btn-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:none;border:none;">
+                  <i class="fas fa-ellipsis-v" style="font-size: 28px;text-shadow: 0 0 3px #212121;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background:none;border:none;margin-top:-7px;">
+                 <a class="btn btn-warning btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}">✏edit</a>
+                  <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">🗑️delete</button>
                 </div>
-                <div class="col-11" style="margin-left:-10px">
-                  {{ form.body(placeholder="Add a comment", class="form-control form-control-sm comment-styles", style="color:#000;") }}
+                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel" style="color:#000;">Delete post?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                          <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-          </form>
-          </div>
+        {% endif %}
 
-          <div class="ml-1 mb-4">
-            {% if post.comments.count() > 0 %}<code>{{post.comments.count()}} comments</code><br>{% endif %}
-            {% for comment in post.comments if current_user.is_authenticated %}
-            <a href="#">
-              <img src="{{ url_for('static', filename='profile_pics/' + comment.author.dp) }}" style="width:20px;height:20px;border-radius:50%;"></a>
-                <span>
-                  <code style="color:#999;">{{comment.author.username}}:</code> 
-                  <code style="color:#000;">{{comment.body}}</code> <br>
-                  <!--<small class="text-muted ml-4">{{ moment(comment.date_posted).fromNow() }}</small>-->
-                </span>
-            {% endfor %}
+                </div>
+                <div class="col-sm-7">
+                    <div class="card-body">
+                      <span class="card-title" style="font-size:30px;text-transform:uppercase;color:#000;">{{post.title}} - {{post.price}}</span> 
+                      <br>
+
+                      <img src="{{ url_for('static', filename='profile_pics/' + post.author.dp) }}" style="height:30px;width:30px;border-radius:50%;border: 2px solid #ccc"> {{post.author.username.title()}}</a>
+                       <br>
+
+                      <div class="mt-2">
+                        <code style="color:#000;">{{post.content}}</code> 
+                      </div>
+
+                      <div class="mt-2">
+                        <small>📌 {{post.author.location}}</small>
+                        <small class="pl-3">📞 {{post.author.contact}}</small>
+                        <small class="pl-3">⏱ {{post.date_posted.strftime('%a, %d %b')}}</small>
+                        {% if post.author != current_user %}
+                          <a href="{{ url_for('message',recipient=post.author.username) }}"><small class="pl-3">💬 DM</small></a>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                      <div class="comments ml-2">
+                      <span class="ml-2" style="font-weight:700;font-size:12px;letter-spacing:1.5px;">COMMENTS</span>
+                      <form method="POST" action="" enctype="multipart/form-data">
+                      {{ form.hidden_tag() }}
+                        <div class="row">
+                          <div class="col-1">
+                            <img src="{{ url_for('static', filename='profile_pics/' + current_user.dp) }}" style="width:30px;height:30px;border-radius:50%;margin-top:8px;">
+                          </div>
+                          <div class="col-11" style="margin-left:-10px">
+                            {{ form.body(placeholder="Add a comment", class="form-control form-control-sm comment-styles", style="color:#000;") }}
+                          </div>
+                        </div>
+                    </form>
+                    </div>
+
+                    <div class="ml-1 mb-4">
+                      {% if post.comments.count() > 0 %}<code>{{post.comments.count()}} comments</code><br>{% endif %}
+                      {% for comment in post.comments if current_user.is_authenticated %}
+                      <a href="#">
+                        <img src="{{ url_for('static', filename='profile_pics/' + comment.author.dp) }}" style="width:20px;height:20px;border-radius:50%;"></a>
+                          <span>
+                            <code style="color:#999;">{{comment.author.username}}:</code> 
+                            <code style="color:#000;">{{comment.body}}</code> <br>
+                            <!--<small class="text-muted ml-4">{{ moment(comment.date_posted).fromNow() }}</small>-->
+                          </span>
+                      {% endfor %}
+                  </div>
+                  <!-- end of comments -->
+
+                </div>
+            </div>
         </div>
+        <!-- suggested products -->
+          <section class="pt-5 pb-5">
+          <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-3">Suggested</h3>
+                </div>
+                <div class="col-6 text-right">
+                    <a class="btn btn-primary mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                    <a class="btn btn-primary mb-3 " href="#carouselExampleIndicators2" role="button" data-slide="next">
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="col-12">
+                    <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
 
-        <br>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="row">
 
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://bit.ly/3crPay5" style="height:250px">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Denim Jacket</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://bit.ly/30H4xNB">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Airpods Max</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://bit.ly/2NhNVJl">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Iphone 12</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="row">
+
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1532771098148-525cefe10c23?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=3f317c1f7a16116dec454fbc267dd8e4">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1532715088550-62f09305f765?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=ebadb044b374504ef8e81bdec4d0e840">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=0754ab085804ae8a3b562548e6b4aa2e">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="row">
+
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=ee8417f0ea2a50d53a12665820b54e23">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1532777946373-b6783242f211?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=8ac55cf3a68785643998730839663129">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img class="img-fluid" alt="100%x280" src="https://images.unsplash.com/photo-1532763303805-529d595877c5?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=5ee4fd5d19b40f93eadb21871757eda6">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Special title treatment</h4>
+                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
+        </section>
+        <!-- end of suggested items -->
     </div>
 
 
 
-    <div class="col-lg-3 d-none d-lg-block position-fixed offset-lg-9">
+    <div class="col-lg-1 d-none d-lg-block position-fixed offset-lg-11">
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category , message in messages %}
